@@ -2,7 +2,7 @@
 import css from "./NoteForm.module.css";
 import { FormEvent, useId, useState } from "react";
 import * as Yup from "yup";
-import { createNote } from "../../lib/api";
+import { createNote } from "../../lib/api/api";
 import type { NoteFormData } from "../../types/note";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
