@@ -26,6 +26,14 @@ export async function proxy(request: NextRequest) {
 
       const setCookie = response.headers["set-cookie"];
 
+      let nextResponse: NextResponse;
+
+      if (isPublicRoute) {
+        nextResponse = NextResponse.redirect(new URL("/", request.url));
+      } else {
+        nextResponse = NextResponse.next();
+      }
+
       if (setCookie) {
         const cookieArray = Array.isArray(setCookie)
           ? setCookie
@@ -34,25 +42,32 @@ export async function proxy(request: NextRequest) {
         for (const cookieStr of cookieArray) {
           const parsed = parseSetCookie(cookieStr);
           if (parsed.name && parsed.value) {
-            cookieStore.set(parsed.name, parsed.value, parsed);
+            nextResponse.cookies.set(parsed.name, parsed.value, {
+              expires: parsed.expires,
+              path: parsed.path,
+              maxAge: parsed.maxAge,
+              httpOnly: parsed.httpOnly,
+              secure: parsed.secure,
+              sameSite: parsed.sameSite,
+            });
           }
         }
       }
 
-      if (isPublicRoute) {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-
-      return NextResponse.next();
+      return nextResponse;
     } catch {
-      
-      cookieStore.delete("refreshToken");
+      let nextResponse: NextResponse;
 
       if (isPrivateRoute) {
-        return NextResponse.redirect(new URL("/sign-in", request.url));
+        nextResponse = NextResponse.redirect(new URL("/sign-in", request.url));
+      } else {
+        nextResponse = NextResponse.next();
       }
 
-      return NextResponse.next();
+      nextResponse.cookies.delete("accessToken");
+      nextResponse.cookies.delete("refreshToken");
+
+      return nextResponse;
     }
   }
 
