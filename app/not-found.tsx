@@ -1,31 +1,39 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import css from "./page.module.css";
+import { HOME_PAGE_URL, OG_IMAGE, SITE_NAME } from "@/constants";
+import Image from "next/image";
+
 export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Page does not exist",
+  title: "Page Not Found | NoteHub",
+  description:
+    "The page you're looking for doesn't exist. Return to NoteHub to continue creating and managing your notes.",
   openGraph: {
-    title: "NoteHub",
-    description: "Page does not exist",
-    url: `https://notehub.com/not-found`,
-    siteName: "NoteHub",
-    images: [
-      {
-        url: "https://i.ibb.co/hRmh19Gt/Note-Hub-green.png",
-        width: 1200,
-        height: 630,
-        alt: "NoteHub Not Found",
-      },
-    ],
-    type: "article",
+    title: "404 — Page Not Found | NoteHub",
+    description:
+      "Oops! The page you tried to reach doesn't exist. Go back to NoteHub and keep your notes organized.",
+    url: `${HOME_PAGE_URL}/404`,
+    siteName: SITE_NAME,
+    images: [OG_IMAGE],
   },
 };
-export default function NotFound() {
+
+const NotFound = () => {
   return (
-    <>
+    <section className={`${css.container} ${css.notFound}`}>
       <h1 className={css.title}>404 - Page not found</h1>
       <p className={css.description}>
         Sorry, the page you are looking for does not exist.
       </p>
-    </>
+      <Image
+        className={css.notFoundImg}
+        src="/404-error.svg"
+        alt="Not Found image"
+        width={300}
+        height={300}
+        priority
+      />
+    </section>
   );
-}
+};
+
+export default NotFound;

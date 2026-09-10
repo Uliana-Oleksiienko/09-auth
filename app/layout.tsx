@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { Roboto } from "next/font/google";
+import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
-import { Roboto } from "next/font/google";
+import "modern-normalize";
+import "./globals.css";
+import { HOME_PAGE_URL, OG_IMAGE, SITE_NAME } from "@/constants";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -15,22 +19,14 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "NoteHub",
   description:
-    "NoteHub is a simple and efficient application designed for managing personal notes",
+    "NoteHub helps you create, organize, and manage personal notes easily and efficiently.",
   openGraph: {
-    title: "NoteHub",
+    title: "NoteHub — Your Personal Space for Notes",
     description:
-      "NoteHub is a simple and efficient application designed for managing personal notes",
-    url: `https://notehub.com/`,
-    siteName: "NoteHub",
-    images: [
-      {
-        url: "https://i.ibb.co/hRmh19Gt/Note-Hub-green.png",
-        width: 1200,
-        height: 630,
-        alt: "NoteHub",
-      },
-    ],
-    type: "article",
+      "A simple and efficient app to create, organize, and manage your notes. Capture ideas, stay organized, and boost productivity with NoteHub.",
+    url: HOME_PAGE_URL,
+    siteName: SITE_NAME,
+    images: [OG_IMAGE],
   },
 };
 
@@ -43,12 +39,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable}`}>
+      <body className={roboto.variable}>
         <TanStackProvider>
-          <Header />
-          {children}
-          {modal}
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <main>
+              {children}
+              {modal}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                }}
+              />
+            </main>
+            <Footer />
+          </AuthProvider>
         </TanStackProvider>
       </body>
     </html>

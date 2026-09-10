@@ -1,32 +1,43 @@
+"use client";
+
 import ReactPaginate from "react-paginate";
-import styles from "./Pagination.module.css";
+import css from "./Pagination.module.css";
+import { PAGINATION_CONFIG } from "../../constants";
+import { useEffect, useRef } from "react";
 
 interface PaginationProps {
-  pageCount: number;
-  currentPage: number;
-  onPageChange: (selectedPage: number) => void;
+  totalPages: number;
+  page: number;
+  handlePageChange: (page: number) => void;
 }
 
 export default function Pagination({
-  pageCount,
-  currentPage,
-  onPageChange,
+  totalPages,
+  page,
+  handlePageChange,
 }: PaginationProps) {
-  if (!pageCount || pageCount <= 1) {
-    return null;
-  }
+  const navRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const ul = navRef.current?.querySelector("ul");
+    if (ul) {
+      ul.removeAttribute("role");
+      ul.removeAttribute("aria-label");
+    }
+  }, [totalPages, page]);
 
   return (
-    <ReactPaginate
-      pageCount={pageCount}
-      pageRangeDisplayed={5}
-      marginPagesDisplayed={1}
-      onPageChange={({ selected }) => onPageChange(selected + 1)}
-      forcePage={currentPage - 1}
-      containerClassName={styles.pagination}
-      activeClassName={styles.active}
-      nextLabel="→"
-      previousLabel="←"
-    />
+    <nav aria-label="Pagination" ref={navRef}>
+      <ReactPaginate
+        {...PAGINATION_CONFIG}
+        pageCount={totalPages}
+        forcePage={page - 1}
+        onPageChange={({ selected }) => handlePageChange(selected + 1)}
+        containerClassName={css.pagination}
+        renderOnZeroPageCount={null}
+        activeClassName={css.active}
+        disabledClassName={css.disabled}
+      />
+    </nav>
   );
 }

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AuthNavigation from "../AuthNavigation/AuthNavigation";
-import "bootstrap/dist/css/bootstrap.min.css";
 import css from "./Navbar.module.css";
 
 const Navbar = () => {

@@ -1,62 +1,64 @@
-import { fetchNotes } from "@/lib/api/api";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import FilterPageClient from "./Notes.client";
+import NotesClient from "./Notes.client";
 import { Metadata } from "next";
+import { HOME_PAGE_URL, OG_IMAGE, SITE_NAME } from "@/constants";
+import { fetchNotes } from "@/lib/api/serverApi";
 
-interface FilterPageProps {
+interface Props {
   params: Promise<{ slug: string[] }>;
 }
-interface GenerateMetadataProps {
-  params: Promise<{ slug: string[] }>;
-}
 
-export async function generateMetadata({
-  params,
-}: GenerateMetadataProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const category = slug[0] === "all" ? "all" : slug[0];
+  const tag = slug[0] === "all" ? undefined : slug[0];
+
+  const pageTitle = tag
+    ? `Notes filtered by "${tag}" | NoteHub`
+    : "All Notes | NoteHub";
+
+  const pageDescription = tag
+    ? `View all notes tagged with "${tag}" in NoteHub. Easily browse and manage your categorized notes.`
+    : "Browse all your notes in NoteHub — a simple and efficient way to stay organized.";
+
+  const pageUrl = tag
+    ? `${HOME_PAGE_URL}/notes/filter/${tag}`
+    : `${HOME_PAGE_URL}/notes/filter/all`;
+
   return {
-    title: `NoteHub`,
-    description: `Notes within the category ${category}`,
+    title: pageTitle,
+    description: pageDescription,
     openGraph: {
-      title: `NoteHub`,
-      description: `Notes within the category ${category}`,
-      url: `https://notehub.com/notes/filter/${category}`,
-      siteName: "NoteHub",
-      images: [
-        {
-          url: "https://i.ibb.co/hRmh19Gt/Note-Hub-green.png",
-          width: 1200,
-          height: 630,
-          alt: `Notes within the category ${category}`,
-        },
-      ],
-      type: "article",
+      title: pageTitle,
+      description: pageDescription,
+      url: pageUrl,
+      siteName: SITE_NAME,
+      images: [OG_IMAGE],
     },
   };
 }
 
-export default async function FilterPage({ params }: FilterPageProps) {
+const FilterNotes = async ({ params }: Props) => {
   const { slug } = await params;
-  const category = slug[0] === "all" ? undefined : slug[0];
-  const query = "";
-  const currentPage = 1;
+  const tag = slug[0] === "all" ? undefined : slug[0];
 
   const queryClient = new QueryClient();
-  
-  
+  const searchQuery = "";
+  const currentPage = 1;
+
   await queryClient.prefetchQuery({
-    queryKey: ["notes", currentPage, query, category],
-    queryFn: () => fetchNotes(currentPage, query, category), 
+    queryKey: ["notes", searchQuery, currentPage, tag],
+    queryFn: () => fetchNotes(searchQuery, currentPage, tag),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <FilterPageClient category={category} />
+      <NotesClient tag={tag} />
     </HydrationBoundary>
   );
-}
+};
+
+export default FilterNotes;

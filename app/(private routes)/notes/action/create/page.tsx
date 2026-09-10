@@ -1,34 +1,31 @@
-import css from "./CreateNote.module.css";
 import NoteForm from "@/components/NoteForm/NoteForm";
+import css from "./page.module.css";
 import { Metadata } from "next";
+import { HOME_PAGE_URL, OG_IMAGE, SITE_NAME } from "@/constants";
 
 export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Creating Note",
+  title: "Create a new note | NoteHub",
+  description:
+    "Start organizing your thoughts with NoteHub — create a new personal note quickly and efficiently.",
   openGraph: {
-    title: "NoteHub",
-    description: "Creating Note",
-    url: `https://notehub.com/action/create`,
-    siteName: "NoteHub",
-    images: [
-      {
-        url: "https://i.ibb.co/hRmh19Gt/Note-Hub-green.png",
-        width: 1200,
-        height: 630,
-        alt: "NoteHub",
-      },
-    ],
-    type: "article",
+    title: "Create a new note | NoteHub",
+    description:
+      "Start organizing your thoughts with NoteHub — create a new personal note quickly and efficiently.",
+    url: `${HOME_PAGE_URL}/notes/action/create`,
+    siteName: SITE_NAME,
+    images: [OG_IMAGE],
   },
 };
 
-export default function CreateNote() {
+const CreateNote = () => {
   return (
-    <main className={css.main}>
+    <section className={css.main}>
       <div className={css.container}>
         <h1 className={css.title}>Create note</h1>
         <NoteForm />
       </div>
-    </main>
+    </section>
   );
-}
+};
+
+export default CreateNote;
