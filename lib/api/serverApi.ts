@@ -4,8 +4,15 @@ import { User } from "@/types/user";
 import { AxiosResponse } from "axios";
 import { NOTES_PER_PAGE } from "@/constants";
 import { Note } from "@/types/note";
-import { CheckSessionRequest, FetchNotesResponse } from "./clientApi";
 
+export interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
+
+export interface CheckSessionRequest {
+  success: boolean;
+}
 
 export const fetchNotes = async (
   search: string,
