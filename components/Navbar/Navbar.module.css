@@ -1,0 +1,102 @@
+.headerNavbar {
+    padding: 0;
+}
+
+.navigation {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navigationItem {
+    display: flex;
+    align-items: center;
+}
+
+.navigationLink {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+}
+
+.navigationLink:hover {
+    color: #ddd;
+}
+
+.navbar-collapse {
+    display: block !important;
+}
+
+.smallToggler {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.smallToggler:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.burger,
+.burger::before,
+.burger::after {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+    position: relative;
+}
+
+.burger::before,
+.burger::after {
+    position: absolute;
+    left: 0;
+}
+
+.burger::before {
+    top: -6px;
+}
+
+.burger::after {
+    top: 6px;
+}
+
+.smallToggler[aria-expanded="true"] .burger {
+    background-color: transparent;
+}
+
+.smallToggler[aria-expanded="true"] .burger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.smallToggler[aria-expanded="true"] .burger::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+@media (min-width: 992px) {
+    .navbar-collapse {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .navigation {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
